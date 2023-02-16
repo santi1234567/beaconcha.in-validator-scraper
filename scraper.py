@@ -3,11 +3,11 @@ import sys
 import time
 from bs4 import BeautifulSoup
 from functions import get_validator_data, save_data_csv
-
+from tqdm import tqdm
 
 # TODO: Handle error when GET request doesn't return code 200
 
-SCRAPE_COOLDOWN = 1  # seconds
+SCRAPE_COOLDOWN = 0.01  # seconds
 FIRST_VALIDATOR_ARGUMENT_INDEX = 1
 LAST_VALIDATOR_ARGUMENT_INDEX = 2
 
@@ -33,7 +33,7 @@ match len(sys.argv):
         )
 
 validators = []
-for i in range(first_validator_index, last_validator_index+1):
+for i in tqdm(range(first_validator_index, last_validator_index+1)):
     # specify the URL to scrape
     url = 'https://beaconcha.in/validator/'+str(i)+'#deposits'
 
