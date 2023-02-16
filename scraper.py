@@ -32,7 +32,7 @@ match len(sys.argv):
             "Script should only recieve one or two arguments."
         )
 
-validators = {}
+validators = []
 for i in range(first_validator_index, last_validator_index+1):
     # specify the URL to scrape
     url = 'https://beaconcha.in/validator/'+str(i)+'#deposits'
@@ -46,13 +46,13 @@ for i in range(first_validator_index, last_validator_index+1):
 
         pool, validator_address, depositor_address = get_validator_data(soup)
         if validator_address and depositor_address:
-            if pool:
-                if pool not in validators:
-                    validators[pool] = []
-                validators[pool].append({
-                    "index": i,
-                    "validator_address": validator_address,
-                    "depositor_address": depositor_address})
+            if not pool:  # validator isn't labeled
+                pool = "undefined"
+            validators.append({
+                "index": i,
+                "pool": pool,
+                "validator_address": validator_address,
+                "depositor_address": depositor_address})
         else:
             print("Validator doesn't yet exist or page format changed")
 
