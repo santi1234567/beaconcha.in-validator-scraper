@@ -13,3 +13,9 @@ or to get multiple validators:
 ```sh
 python scraper.py FIRST_VALIDATOR_INDEX LAST_VALIDATOR_INDEX
 ```
+
+or also in free_run mode:
+
+```sh
+python scraper.py
+```
