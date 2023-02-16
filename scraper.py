@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 from functions import get_validator_data, save_data_csv
 
 
-# TODO: Handle error when validator doesnt yet exist and also when GET requests doesn't return code 200
+# TODO: Handle error when GET request doesn't return code 200
 
 SCRAPE_COOLDOWN = 1  # seconds
 FIRST_VALIDATOR_ARGUMENT_INDEX = 1
@@ -41,18 +41,20 @@ for i in range(first_validator_index, last_validator_index+1):
     response = requests.get(url)
 
     if response.status_code == 200:
-
         # parse the HTML content of the response using BeautifulSoup
         soup = BeautifulSoup(response.content, 'html.parser')
 
         pool, validator_address, depositor_address = get_validator_data(soup)
-        if pool:
-            if pool not in validators:
-                validators[pool] = []
-            validators[pool].append({
-                "index": i,
-                "validator_address": validator_address,
-                "depositor_address": depositor_address})
+        if validator_address and depositor_address:
+            if pool:
+                if pool not in validators:
+                    validators[pool] = []
+                validators[pool].append({
+                    "index": i,
+                    "validator_address": validator_address,
+                    "depositor_address": depositor_address})
+        else:
+            print("Validator doesn't yet exist or page format changed")
 
         time.sleep(SCRAPE_COOLDOWN)
     else:
